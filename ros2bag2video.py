@@ -176,7 +176,7 @@ class RosVideoWriter(Node):
                 # HACK AJB Use this for SkateBot
                 # "/camera_node/image_raw/compressed",
                 # HACK AJB Use this for joeys.
-                "/je7c/camera/compressed",
+                self.opt_topic,
             ]
         )
         return process
@@ -352,7 +352,10 @@ class RosVideoWriter(Node):
         self.msg_fmt = "rgb8"
         # print("AJB: msg: ", msg)
 
-        img = self.bridge.compressed_imgmsg_to_cv2(msg, self.msg_fmt)
+        if self.msgfmt_literal == "sensor_msgs/msg/CompressedImage":
+            img = self.bridge.compressed_imgmsg_to_cv2(msg, self.msg_fmt)
+        else:
+            img = self.bridge.imgmsg_to_cv2(msg, self.msg_fmt)
         filename = str(self.frame_no).zfill(4) + ".png"
         cv2.imwrite(filename, img)
 
